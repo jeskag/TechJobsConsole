@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TechJobsConsole
 {
@@ -61,9 +62,12 @@ namespace TechJobsConsole
                     List<Dictionary<string, string>> searchResults;
 
                     // Fetch results
+                    //This is where we need to return the results.  Need to search across all columns.
                     if (columnChoice.Equals("all"))
                     {
-                        Console.WriteLine("Search all fields not yet implemented.");
+                        searchResults = JobData.FindByValue(searchTerm);
+                        PrintJobs(searchResults);
+                        //Console.WriteLine("Search all fields not yet implemented.");
                     }
                     else
                     {
@@ -116,9 +120,28 @@ namespace TechJobsConsole
             return choiceKeys[choiceIdx];
         }
 
+
+        //This is where we'll print out all of the jobs
         private static void PrintJobs(List<Dictionary<string, string>> someJobs)
         {
-            Console.WriteLine("printJobs is not implemented yet");
+            if (someJobs.Count == 0)
+            {
+                Console.WriteLine("No results found");
+            }
+
+            foreach (Dictionary<string, string> job in someJobs)
+            {
+                Console.WriteLine("*****");
+
+                foreach (KeyValuePair<string, string> pair in job)
+                {
+                    Console.WriteLine(string.Format("{0}: {1}", pair.Key, pair.Value));
+                }
+
+                Console.WriteLine("*****");
+                Console.WriteLine("\n");
+            }
+        
         }
     }
 }

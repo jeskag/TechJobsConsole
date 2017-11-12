@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Linq;
 
 namespace TechJobsConsole
 {
@@ -20,6 +21,37 @@ namespace TechJobsConsole
          * Returns a list of all values contained in a given column,
          * without duplicates. 
          */
+        public static List<Dictionary<string, string>> FindByValue(string value)
+        {
+            LoadData();
+
+            List<Dictionary<string, string>> jobs = new List<Dictionary<string, string>>();
+
+            //Need 2 foreach loops.  First one mirrors FindbyColumn&Value...2nd is KeyValuePair
+            foreach (Dictionary<string, string> job in AllJobs)
+            {
+
+                foreach (KeyValuePair<string, string> line in job)
+                {
+                    //newValue = user entered search
+                    //value = value in dictionary
+                    //does jobs already contain line - see if jobs contain line -- is line already in job
+                    string newValue = line.Value.ToString().ToLower();
+                    //if (line.value.ToString().Equals(value))
+                    if (newValue.Contains(value.ToString().ToLower()))
+                    {
+                        if (!jobs.Contains(job))
+                        {
+                            jobs.Add(job);
+                        }
+                    }
+
+                }
+            }
+
+                return jobs;
+        }
+
         public static List<string> FindAll(string column)
         {
             LoadData();
@@ -43,18 +75,24 @@ namespace TechJobsConsole
             // load data, if not already loaded
             LoadData();
 
+            //Dictionary is each row (that WAS from the csv file)
             List<Dictionary<string, string>> jobs = new List<Dictionary<string, string>>();
 
+            //job = search results
             foreach (Dictionary<string, string> row in AllJobs)
             {
-                string aValue = row[column];
+                //value = search term
+                //aValue = a cell in excel
+                string aValue = row[column].ToString().ToLower();
 
-                if (aValue.Contains(value))
+                //if the cell contains the search term, add the row to the search results
+                if (aValue.Contains(value.ToString().ToLower()))
                 {
                     jobs.Add(row);
                 }
             }
 
+            //returns search results
             return jobs;
         }
 
